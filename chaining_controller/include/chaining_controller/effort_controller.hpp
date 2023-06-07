@@ -5,6 +5,7 @@
 #include <rclcpp_lifecycle/node_interfaces/lifecycle_node_interface.hpp>
 #include <rclcpp_lifecycle/state.hpp>
 #include <string>
+#include <hardware_interface/types/hardware_interface_type_values.hpp>
 
 #include "chaining_controller/visibility_control.h"
 
@@ -15,6 +16,9 @@ class EffortController : public controller_interface::ControllerInterface
 {
 public:
   CHAINING_CONTROLLER_PUBLIC
+  controller_interface::CallbackReturn on_init() override;
+
+  CHAINING_CONTROLLER_PUBLIC
   controller_interface::InterfaceConfiguration command_interface_configuration() const override;
 
   CHAINING_CONTROLLER_PUBLIC
@@ -24,12 +28,12 @@ public:
   controller_interface::return_type update(
     const rclcpp::Time & time, const rclcpp::Duration & period) override;
 
-  CHAINING_CONTROLLER_PUBLIC
-  controller_interface::CallbackReturn on_init() override;
 
 private:
   void registerJointFeedback(const std::vector<std::string> &);
 
+  int n_joints_;
+  std::vector<std::string> joint_names_; 
   std::vector<double> joint_position_;
   std::vector<double> joint_velocity_;
   std::vector<double> joint_effort_;

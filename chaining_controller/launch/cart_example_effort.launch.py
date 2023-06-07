@@ -82,7 +82,7 @@ def generate_launch_description():
         ],
         output="screen",
     )
-    load_joint_trajectory_controller = ExecuteProcess(
+    load_chained_controller = ExecuteProcess(
         cmd=[
             "ros2",
             "control",
@@ -105,6 +105,12 @@ def generate_launch_description():
                 event_handler=OnProcessExit(
                     target_action=load_joint_state_controller,
                     on_exit=[load_joint_trajectory_controller],
+                )
+            ),
+            RegisterEventHandler(
+                event_handler=OnProcessExit(
+                    target_action=load_joint_trajectory_controller,
+                    on_exit=[load_chained_controller],
                 )
             ),
             gazebo,

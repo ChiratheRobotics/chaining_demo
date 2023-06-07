@@ -83,6 +83,7 @@ bool chaining_controller::ChainedController::on_set_chained_mode(bool chained_mo
 controller_interface::return_type
 chaining_controller::ChainedController::update_reference_from_subscribers()
 {
+  RCLCPP_INFO_ONCE(get_node()->get_logger(), "update_reference_from_subscribers");
   return update() ? controller_interface::return_type::OK
                   : controller_interface::return_type::ERROR;
 }
@@ -90,6 +91,7 @@ chaining_controller::ChainedController::update_reference_from_subscribers()
 controller_interface::return_type chaining_controller::ChainedController::update_and_write_commands(
   const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/)
 {
+  RCLCPP_INFO_ONCE(get_node()->get_logger(), "update_and_write_commands");
   return update() ? controller_interface::return_type::OK
                   : controller_interface::return_type::ERROR;
 }

@@ -77,7 +77,7 @@ def generate_launch_description():
             "control",
             "load_controller",
             "--set-state",
-            "active",
+            "inactive",
             "effort_controller_upper",
         ],
         output="screen",

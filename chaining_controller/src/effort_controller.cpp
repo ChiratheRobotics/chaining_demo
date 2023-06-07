@@ -1,9 +1,7 @@
 #include "chaining_controller/effort_controller.hpp"
 
-controller_interface::CallbackReturn
-chaining_controller::EffortController::on_init()
+controller_interface::CallbackReturn chaining_controller::EffortController::on_init()
 {
-    
   std::string param_name = "joints";
 
   if (!get_node()->get_parameter(param_name, joint_names_))
@@ -24,7 +22,6 @@ chaining_controller::EffortController::on_init()
   joint_velocity_.resize(n_joints_, std::numeric_limits<double>::quiet_NaN());
   joint_effort_.resize(n_joints_, std::numeric_limits<double>::quiet_NaN());
 
-
   return controller_interface::CallbackReturn::SUCCESS;
 }
 
@@ -32,8 +29,7 @@ controller_interface::InterfaceConfiguration
 chaining_controller::EffortController::command_interface_configuration() const
 {
   RCLCPP_INFO(
-    get_node()->get_logger(),
-    "Command Interface EffortController. No Command Interface Required");
+    get_node()->get_logger(), "Command Interface EffortController. No Command Interface Required");
 
   controller_interface::InterfaceConfiguration command_interfaces_config;
   command_interfaces_config.type = controller_interface::interface_configuration_type::NONE;
@@ -59,18 +55,18 @@ chaining_controller::EffortController::state_interface_configuration() const
       state_interfaces_config.names.push_back(
         joint_name + "/" + hardware_interface::HW_IF_VELOCITY);
     });
-  return state_interfaces_config;  
+  return state_interfaces_config;
 }
 
-controller_interface::return_type
-chaining_controller::EffortController::update(
+controller_interface::return_type chaining_controller::EffortController::update(
   const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/)
 {
   registerJointFeedback(joint_names_);
   return controller_interface::return_type::OK;
 }
 
-void chaining_controller::EffortController::registerJointFeedback(const std::vector<std::string> & joint_names_)
+void chaining_controller::EffortController::registerJointFeedback(
+  const std::vector<std::string> & joint_names_)
 {
   for (int i = 0; i < n_joints_; i++)
   {

@@ -29,68 +29,78 @@ import xacro
 
 def generate_launch_description():
     gazebo = IncludeLaunchDescription(
-                PythonLaunchDescriptionSource([os.path.join(
-                    get_package_share_directory('gazebo_ros'), 'launch'), '/gazebo.launch.py']),
-             )
-
-    chaining_controller_path = os.path.join(
-        get_package_share_directory('chaining_controller'))
-
-    xacro_file = os.path.join(chaining_controller_path,
-                              'urdf',
-                              'test_cart_velocity.xacro.urdf')
-    doc = xacro.parse(open(xacro_file))
-    xacro.process_doc(doc)
-    params = {'robot_description': doc.toxml()}
-
-    node_robot_state_publisher = Node(
-        package='robot_state_publisher',
-        executable='robot_state_publisher',
-        output='screen',
-        parameters=[params]
+        PythonLaunchDescriptionSource(
+            [
+                os.path.join(get_package_share_directory("gazebo_ros"), "launch"),
+                "/gazebo.launch.py",
+            ]
+        ),
     )
 
-    spawn_entity = Node(package='gazebo_ros', executable='spawn_entity.py',
-                        arguments=['-topic', 'robot_description',
-                                   '-entity', 'cartpole'],
-                        output='screen')
+    chaining_controller_path = os.path.join(get_package_share_directory("chaining_controller"))
+
+    xacro_file = os.path.join(chaining_controller_path, "urdf", "test_cart_velocity.xacro.urdf")
+    doc = xacro.parse(open(xacro_file))
+    xacro.process_doc(doc)
+    params = {"robot_description": doc.toxml()}
+
+    node_robot_state_publisher = Node(
+        package="robot_state_publisher",
+        executable="robot_state_publisher",
+        output="screen",
+        parameters=[params],
+    )
+
+    spawn_entity = Node(
+        package="gazebo_ros",
+        executable="spawn_entity.py",
+        arguments=["-topic", "robot_description", "-entity", "cartpole"],
+        output="screen",
+    )
 
     load_joint_state_controller = ExecuteProcess(
-        cmd=['ros2', 'control', 'load_controller', '--set-state', 'active',
-             'joint_state_broadcaster'],
-        output='screen'
+        cmd=[
+            "ros2",
+            "control",
+            "load_controller",
+            "--set-state",
+            "active",
+            "joint_state_broadcaster",
+        ],
+        output="screen",
     )
 
     load_joint_trajectory_controller = ExecuteProcess(
-        cmd=['ros2', 'control', 'load_controller', '--set-state', 'active', 'velocity_controller'],
-        output='screen'
+        cmd=["ros2", "control", "load_controller", "--set-state", "active", "velocity_controller"],
+        output="screen",
     )
 
     load_imu_sensor_broadcaster = ExecuteProcess(
-        cmd=['ros2', 'control', 'load_controller', 'imu_sensor_broadcaster'],
-        output='screen'
+        cmd=["ros2", "control", "load_controller", "imu_sensor_broadcaster"], output="screen"
     )
 
-    return LaunchDescription([
-        RegisterEventHandler(
-            event_handler=OnProcessExit(
-                target_action=spawn_entity,
-                on_exit=[load_joint_state_controller],
-            )
-        ),
-        RegisterEventHandler(
-            event_handler=OnProcessExit(
-                target_action=load_joint_state_controller,
-                on_exit=[load_joint_trajectory_controller],
-            )
-        ),
-        RegisterEventHandler(
-            event_handler=OnProcessExit(
-                target_action=load_joint_trajectory_controller,
-                on_exit=[load_imu_sensor_broadcaster],
-            )
-        ),
-        gazebo,
-        node_robot_state_publisher,
-        spawn_entity,
-    ])
+    return LaunchDescription(
+        [
+            RegisterEventHandler(
+                event_handler=OnProcessExit(
+                    target_action=spawn_entity,
+                    on_exit=[load_joint_state_controller],
+                )
+            ),
+            RegisterEventHandler(
+                event_handler=OnProcessExit(
+                    target_action=load_joint_state_controller,
+                    on_exit=[load_joint_trajectory_controller],
+                )
+            ),
+            RegisterEventHandler(
+                event_handler=OnProcessExit(
+                    target_action=load_joint_trajectory_controller,
+                    on_exit=[load_imu_sensor_broadcaster],
+                )
+            ),
+            gazebo,
+            node_robot_state_publisher,
+            spawn_entity,
+        ]
+    )

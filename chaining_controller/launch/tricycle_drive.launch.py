@@ -29,43 +29,51 @@ import xacro
 
 def generate_launch_description():
     gazebo = IncludeLaunchDescription(
-                PythonLaunchDescriptionSource([os.path.join(
-                    get_package_share_directory('gazebo_ros'), 'launch'), '/gazebo.launch.py']),
-             )
+        PythonLaunchDescriptionSource(
+            [
+                os.path.join(get_package_share_directory("gazebo_ros"), "launch"),
+                "/gazebo.launch.py",
+            ]
+        ),
+    )
 
-    chaining_controller_path = os.path.join(
-        get_package_share_directory('chaining_controller'))
+    chaining_controller_path = os.path.join(get_package_share_directory("chaining_controller"))
 
-    xacro_file = os.path.join(chaining_controller_path,
-                              'urdf',
-                              'test_tricycle_drive.xacro.urdf')
+    xacro_file = os.path.join(chaining_controller_path, "urdf", "test_tricycle_drive.xacro.urdf")
 
     doc = xacro.parse(open(xacro_file))
     xacro.process_doc(doc)
-    params = {'robot_description': doc.toxml()}
+    params = {"robot_description": doc.toxml()}
 
     node_robot_state_publisher = Node(
-        package='robot_state_publisher',
-        executable='robot_state_publisher',
-        output='screen',
-        parameters=[params]
+        package="robot_state_publisher",
+        executable="robot_state_publisher",
+        output="screen",
+        parameters=[params],
     )
 
-    spawn_entity = Node(package='gazebo_ros', executable='spawn_entity.py',
-                        arguments=['-topic', 'robot_description',
-                                   '-entity', 'tricycle'],
-                        output='screen')
+    spawn_entity = Node(
+        package="gazebo_ros",
+        executable="spawn_entity.py",
+        arguments=["-topic", "robot_description", "-entity", "tricycle"],
+        output="screen",
+    )
 
     load_joint_state_controller = ExecuteProcess(
-        cmd=['ros2', 'control', 'load_controller', '--set-state', 'active',
-             'joint_state_broadcaster'],
-        output='screen'
+        cmd=[
+            "ros2",
+            "control",
+            "load_controller",
+            "--set-state",
+            "active",
+            "joint_state_broadcaster",
+        ],
+        output="screen",
     )
 
     load_tricycle_controller = ExecuteProcess(
-        cmd=['ros2', 'control', 'load_controller', '--set-state', 'active',
-             'tricycle_controller'],
-        output='screen'
+        cmd=["ros2", "control", "load_controller", "--set-state", "active", "tricycle_controller"],
+        output="screen",
     )
 
     rviz = Node(
@@ -78,21 +86,23 @@ def generate_launch_description():
         output="screen",
     )
 
-    return LaunchDescription([
-        RegisterEventHandler(
-            event_handler=OnProcessExit(
-                target_action=spawn_entity,
-                on_exit=[load_joint_state_controller],
-            )
-        ),
-        RegisterEventHandler(
-            event_handler=OnProcessExit(
-                target_action=load_joint_state_controller,
-                on_exit=[load_tricycle_controller],
-            )
-        ),
-        gazebo,
-        rviz,
-        node_robot_state_publisher,
-        spawn_entity,
-    ])
+    return LaunchDescription(
+        [
+            RegisterEventHandler(
+                event_handler=OnProcessExit(
+                    target_action=spawn_entity,
+                    on_exit=[load_joint_state_controller],
+                )
+            ),
+            RegisterEventHandler(
+                event_handler=OnProcessExit(
+                    target_action=load_joint_state_controller,
+                    on_exit=[load_tricycle_controller],
+                )
+            ),
+            gazebo,
+            rviz,
+            node_robot_state_publisher,
+            spawn_entity,
+        ]
+    )

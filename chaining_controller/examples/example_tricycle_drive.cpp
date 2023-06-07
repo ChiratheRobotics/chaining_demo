@@ -24,11 +24,10 @@ int main(int argc, char * argv[])
 {
   rclcpp::init(argc, argv);
 
-  std::shared_ptr<rclcpp::Node> node =
-    std::make_shared<rclcpp::Node>("tricycle_drive_test_node");
+  std::shared_ptr<rclcpp::Node> node = std::make_shared<rclcpp::Node>("tricycle_drive_test_node");
 
-  auto publisher = node->create_publisher<geometry_msgs::msg::Twist>(
-    "/tricycle_controller/cmd_vel", 10);
+  auto publisher =
+    node->create_publisher<geometry_msgs::msg::Twist>("/tricycle_controller/cmd_vel", 10);
 
   RCLCPP_INFO(node->get_logger(), "node created");
 
@@ -42,7 +41,8 @@ int main(int argc, char * argv[])
   command.angular.y = 0.0;
   command.angular.z = 0.1;
 
-  while (1) {
+  while (1)
+  {
     publisher->publish(command);
     std::this_thread::sleep_for(50ms);
     rclcpp::spin_some(node);

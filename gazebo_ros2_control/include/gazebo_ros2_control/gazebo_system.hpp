@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 #ifndef GAZEBO_ROS2_CONTROL__GAZEBO_SYSTEM_HPP_
 #define GAZEBO_ROS2_CONTROL__GAZEBO_SYSTEM_HPP_
 
@@ -40,8 +39,7 @@ class GazeboSystem : public GazeboSystemInterface
 {
 public:
   // Documentation Inherited
-  CallbackReturn on_init(const hardware_interface::HardwareInfo & system_info)
-  override;
+  CallbackReturn on_init(const hardware_interface::HardwareInfo & system_info) override;
 
   // Documentation Inherited
   std::vector<hardware_interface::StateInterface> export_state_interfaces() override;
@@ -62,29 +60,23 @@ public:
 
   // Documentation Inherited
   hardware_interface::return_type read(
-    const rclcpp::Time & time,
-    const rclcpp::Duration & period) override;
+    const rclcpp::Time & time, const rclcpp::Duration & period) override;
 
   // Documentation Inherited
   hardware_interface::return_type write(
-    const rclcpp::Time & time,
-    const rclcpp::Duration & period) override;
+    const rclcpp::Time & time, const rclcpp::Duration & period) override;
 
   // Documentation Inherited
   bool initSim(
-    rclcpp::Node::SharedPtr & model_nh,
-    gazebo::physics::ModelPtr parent_model,
-    const hardware_interface::HardwareInfo & hardware_info,
-    sdf::ElementPtr sdf) override;
+    rclcpp::Node::SharedPtr & model_nh, gazebo::physics::ModelPtr parent_model,
+    const hardware_interface::HardwareInfo & hardware_info, sdf::ElementPtr sdf) override;
 
 private:
   void registerJoints(
-    const hardware_interface::HardwareInfo & hardware_info,
-    gazebo::physics::ModelPtr parent_model);
+    const hardware_interface::HardwareInfo & hardware_info, gazebo::physics::ModelPtr parent_model);
 
   void registerSensors(
-    const hardware_interface::HardwareInfo & hardware_info,
-    gazebo::physics::ModelPtr parent_model);
+    const hardware_interface::HardwareInfo & hardware_info, gazebo::physics::ModelPtr parent_model);
 
   /// \brief Private data class
   std::unique_ptr<GazeboSystemPrivate> dataPtr;

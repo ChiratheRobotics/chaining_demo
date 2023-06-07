@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 #ifndef GAZEBO_ROS2_CONTROL__GAZEBO_SYSTEM_INTERFACE_HPP_
 #define GAZEBO_ROS2_CONTROL__GAZEBO_SYSTEM_INTERFACE_HPP_
 
@@ -28,37 +27,55 @@
 
 #include "rclcpp/rclcpp.hpp"
 
-
 namespace gazebo_ros2_control
 {
 
-template<class ENUM, class UNDERLYING = typename std::underlying_type<ENUM>::type>
+template <class ENUM, class UNDERLYING = typename std::underlying_type<ENUM>::type>
 class SafeEnum
 {
 public:
-  SafeEnum()
-  : mFlags(0) {}
-  explicit SafeEnum(ENUM singleFlag)
-  : mFlags(singleFlag) {}
-  SafeEnum(const SafeEnum & original)
-  : mFlags(original.mFlags) {}
+  SafeEnum() : mFlags(0) {}
+  explicit SafeEnum(ENUM singleFlag) : mFlags(singleFlag) {}
+  SafeEnum(const SafeEnum & original) : mFlags(original.mFlags) {}
   ~SafeEnum() = default;
 
   SafeEnum & operator=(const SafeEnum & original) = default;
-  SafeEnum & operator|=(ENUM addValue) {mFlags |= addValue; return *this;}
-  SafeEnum operator|(ENUM addValue) {SafeEnum result(*this); result |= addValue; return result;}
-  SafeEnum & operator&=(ENUM maskValue) {mFlags &= maskValue; return *this;}
-  SafeEnum operator&(ENUM maskValue) {SafeEnum result(*this); result &= maskValue; return result;}
-  SafeEnum operator~() {SafeEnum result(*this); result.mFlags = ~result.mFlags; return result;}
-  explicit operator bool() {return mFlags != 0;}
+  SafeEnum & operator|=(ENUM addValue)
+  {
+    mFlags |= addValue;
+    return *this;
+  }
+  SafeEnum operator|(ENUM addValue)
+  {
+    SafeEnum result(*this);
+    result |= addValue;
+    return result;
+  }
+  SafeEnum & operator&=(ENUM maskValue)
+  {
+    mFlags &= maskValue;
+    return *this;
+  }
+  SafeEnum operator&(ENUM maskValue)
+  {
+    SafeEnum result(*this);
+    result &= maskValue;
+    return result;
+  }
+  SafeEnum operator~()
+  {
+    SafeEnum result(*this);
+    result.mFlags = ~result.mFlags;
+    return result;
+  }
+  explicit operator bool() { return mFlags != 0; }
 
 protected:
   UNDERLYING mFlags;
 };
 
 // SystemInterface provides API-level access to read and command joint properties.
-class GazeboSystemInterface
-  : public hardware_interface::SystemInterface
+class GazeboSystemInterface : public hardware_interface::SystemInterface
 {
 public:
   /// \brief Initilize the system interface
@@ -67,18 +84,16 @@ public:
   /// param[in] control_hardware vector filled with information about robot's control resources
   /// param[in] sdf pointer to the SDF
   virtual bool initSim(
-    rclcpp::Node::SharedPtr & model_nh,
-    gazebo::physics::ModelPtr parent_model,
-    const hardware_interface::HardwareInfo & hardware_info,
-    sdf::ElementPtr sdf) = 0;
+    rclcpp::Node::SharedPtr & model_nh, gazebo::physics::ModelPtr parent_model,
+    const hardware_interface::HardwareInfo & hardware_info, sdf::ElementPtr sdf) = 0;
 
   // Methods used to control a joint.
   enum ControlMethod_
   {
-    NONE      = 0,
-    POSITION  = (1 << 0),
-    VELOCITY  = (1 << 1),
-    EFFORT    = (1 << 2),
+    NONE = 0,
+    POSITION = (1 << 0),
+    VELOCITY = (1 << 1),
+    EFFORT = (1 << 2),
   };
 
   typedef SafeEnum<enum ControlMethod_> ControlMethod;

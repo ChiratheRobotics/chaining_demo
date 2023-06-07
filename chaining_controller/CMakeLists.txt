@@ -89,6 +89,48 @@ ament_export_include_directories(
 ament_export_libraries(
   effort_controller_upper
 )
+
+## chained_controller
+add_library(
+  chained_controller
+  SHARED
+  src/chained_controller.cpp
+)
+target_include_directories(
+  chained_controller
+  PRIVATE
+  include
+)
+ament_target_dependencies(
+  chained_controller
+  controller_interface
+  hardware_interface
+  realtime_tools
+  pluginlib
+  rclcpp
+  rclcpp_lifecycle
+  ${THIS_PACKAGE_INCLUDE_DEPENDS}
+)
+
+pluginlib_export_plugin_description_file(controller_interface chained_controller.xml)
+
+install(
+  TARGETS
+  chained_controller
+  DESTINATION lib
+)
+install(
+  DIRECTORY
+    include
+  DESTINATION include
+)
+
+ament_export_include_directories(
+  include
+)
+ament_export_libraries(
+  chained_controller
+)
 ament_export_dependencies(
   controller_interface
   hardware_interface

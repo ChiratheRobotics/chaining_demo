@@ -41,7 +41,7 @@ private:
 
   std::vector<double> joint_effort_command_;
 
-  int n_joints_;
+  size_t n_joints_;
   std::vector<std::string> joint_names_;
 };
 

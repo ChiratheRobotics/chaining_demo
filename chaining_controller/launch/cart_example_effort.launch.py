@@ -82,7 +82,17 @@ def generate_launch_description():
         ],
         output="screen",
     )
-
+    load_joint_trajectory_controller = ExecuteProcess(
+        cmd=[
+            "ros2",
+            "control",
+            "load_controller",
+            "--set-state",
+            "active",
+            "chained_controller",
+        ],
+        output="screen",
+    )
     return LaunchDescription(
         [
             RegisterEventHandler(

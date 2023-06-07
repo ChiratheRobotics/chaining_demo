@@ -1,5 +1,4 @@
 #include "chaining_controller/chained_controller.hpp"
-#include "chained_controller.hpp"
 
 controller_interface::CallbackReturn chaining_controller::ChainedController::on_init()
 {
@@ -75,7 +74,11 @@ chaining_controller::ChainedController::on_export_reference_interfaces()
   return reference_interfaces;
 }
 
-bool chaining_controller::ChainedController::on_set_chained_mode(bool chained_mode) { return true; }
+bool chaining_controller::ChainedController::on_set_chained_mode(bool chained_mode)
+{
+  chained_mode = true;
+  return chained_mode;
+}
 
 controller_interface::return_type
 chaining_controller::ChainedController::update_reference_from_subscribers()
@@ -85,7 +88,7 @@ chaining_controller::ChainedController::update_reference_from_subscribers()
 }
 
 controller_interface::return_type chaining_controller::ChainedController::update_and_write_commands(
-  const rclcpp::Time & time, const rclcpp::Duration & period)
+  const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/)
 {
   return update() ? controller_interface::return_type::OK
                   : controller_interface::return_type::ERROR;
@@ -103,7 +106,7 @@ bool chaining_controller::ChainedController::update()
 void chaining_controller::ChainedController::registerJointCommand(
   const std::vector<double> & effort)
 {
-  for (int i = 0; i < n_joints_; i++)
+  for (size_t i = 0; i < n_joints_; i++)
   {
     std::string joint_name(joint_names_[i]);
 

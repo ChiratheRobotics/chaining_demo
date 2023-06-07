@@ -1,11 +1,3 @@
-// Copyright (c) 2020-2022 Indian Institute of Science
-// Copyright (c) 2023 Chirathe Robotics
-// All rights reserved.
-/// @file foot_state_estimator.hpp
-/// @author Aditya Sagi
-/// @date 21 Apr, 2022
-/// @brief Description: Library to create foot estimator controller
-
 #ifndef EFFORT_CONTROLLER_HPP
 #define EFFORT_CONTROLLER_HPP
 

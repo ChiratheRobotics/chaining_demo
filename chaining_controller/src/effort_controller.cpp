@@ -32,8 +32,10 @@ chaining_controller::EffortController::command_interface_configuration() const
     get_node()->get_logger(), "Command Interface EffortController. No Command Interface Required");
 
   controller_interface::InterfaceConfiguration command_interfaces_config;
-  command_interfaces_config.type = controller_interface::interface_configuration_type::NONE;
+  command_interfaces_config.type = controller_interface::interface_configuration_type::INDIVIDUAL;
 
+  command_interfaces_config.names.push_back(
+    std::string("chained_controller/") + hardware_interface::HW_IF_EFFORT);
   return command_interfaces_config;
 }
 

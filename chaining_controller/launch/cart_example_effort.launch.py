@@ -88,7 +88,7 @@ def generate_launch_description():
             "control",
             "load_controller",
             "--set-state",
-            "active",
+            "inactive",
             "chained_controller",
         ],
         output="screen",

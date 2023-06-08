@@ -76,6 +76,8 @@ chaining_controller::ChainedController::on_export_reference_interfaces()
 
 bool chaining_controller::ChainedController::on_set_chained_mode(bool chained_mode)
 {
+  RCLCPP_INFO(get_node()->get_logger(), "CHAINED MODE ACTIVE");
+
   chained_mode = true;
   return chained_mode;
 }

@@ -1,4 +1,4 @@
-# Chaining Demo
+# Chaining Controller Demo
 This package is a demonstration of `Chaining Controller` in `ros2_control`.
 
 Tested on: ROS2 Humble

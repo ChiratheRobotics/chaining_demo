@@ -58,7 +58,6 @@ def generate_launch_description():
         arguments=["-topic", "robot_description", "-entity", "cartpole"],
         output="screen",
     )
-
     load_joint_state_controller = ExecuteProcess(
         cmd=[
             "ros2",
@@ -95,18 +94,21 @@ def generate_launch_description():
     )
     return LaunchDescription(
         [
+            # Spawning Model
             RegisterEventHandler(
                 event_handler=OnProcessExit(
                     target_action=spawn_entity,
                     on_exit=[load_joint_state_controller],
                 )
             ),
+            # Launching State Broadcaster
             RegisterEventHandler(
                 event_handler=OnProcessExit(
                     target_action=load_joint_state_controller,
                     on_exit=[load_chained_controller],
                 )
             ),
+            # Launching Chained Controller First and Higher Level Effort Controller After
             RegisterEventHandler(
                 event_handler=OnProcessExit(
                     target_action=load_chained_controller,

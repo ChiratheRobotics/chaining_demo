@@ -1,7 +1,7 @@
 <library path="chained_controller">
   <class name="chaining_controller/ChainedController" type="chaining_controller::ChainedController" base_class_type="controller_interface::ChainableControllerInterface">
     <description>
-        Effort Controller
+        Chaining Controller
     </description>
   </class>
 </library>

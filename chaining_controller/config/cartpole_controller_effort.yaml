@@ -2,13 +2,13 @@ controller_manager:
   ros__parameters:
     update_rate: 1  # Hz
 
-    effort_controller_upper:
+    effort_controller_upper: # Higher Level Controller
       type: chaining_controller/EffortController
 
     joint_state_broadcaster:
       type: joint_state_broadcaster/JointStateBroadcaster
 
-    chained_controller:
+    chained_controller: # Chained Controller at Lower Level
       type: chaining_controller/ChainedController
 
 effort_controller_upper:

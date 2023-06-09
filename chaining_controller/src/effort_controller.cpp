@@ -4,6 +4,7 @@ controller_interface::CallbackReturn chaining_controller::EffortController::on_i
 {
   std::string param_name = "joints";
 
+  // Getting Joint names from parameter server
   if (!get_node()->get_parameter(param_name, joint_names_))
   {
     RCLCPP_ERROR_STREAM(get_node()->get_logger(), "Failed to get parameter: " << param_name);
@@ -34,6 +35,7 @@ chaining_controller::EffortController::command_interface_configuration() const
   controller_interface::InterfaceConfiguration command_interfaces_config;
   command_interfaces_config.type = controller_interface::interface_configuration_type::INDIVIDUAL;
 
+  // Claiming Command interface exported as reference interface by Chaining Controller
   command_interfaces_config.names.push_back(
     std::string("chained_controller/") + hardware_interface::HW_IF_EFFORT);
   return command_interfaces_config;
@@ -62,6 +64,7 @@ chaining_controller::EffortController::state_interface_configuration() const
 
 void chaining_controller::EffortController::jointEffortTester(std::vector<double> & joint_efforts)
 {
+  // Producing Random Values beyond -100 to 100 Range for Joint Effort to be sent to Chaining Controller
   joint_efforts[0] = -50 + (rand() % 160);
   RCLCPP_DEBUG_STREAM(
     get_node()->get_logger(),
@@ -122,6 +125,7 @@ void chaining_controller::EffortController::registerJointCommand(
       command_interfaces_.begin(), command_interfaces_.end(),
       [&joint_name](const hardware_interface::LoanedCommandInterface & interface)
       {
+        // Register Joint Command Inteface from Chaining Controller
         return interface.get_prefix_name() == "chained_controller" &&
                interface.get_interface_name() == hardware_interface::HW_IF_EFFORT;
       });

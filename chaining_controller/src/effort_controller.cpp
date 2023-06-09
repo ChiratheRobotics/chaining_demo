@@ -60,10 +60,18 @@ chaining_controller::EffortController::state_interface_configuration() const
   return state_interfaces_config;
 }
 
+void chaining_controller::EffortController::jointEffortTester(std::vector<double> & joint_efforts)
+{
+  joint_efforts[0] = -50 + (rand() % 160);
+  RCLCPP_DEBUG_STREAM(
+    get_node()->get_logger(),
+    "Joint Effort Value From Higher Level Controller:" << joint_efforts[0]);
+}
 controller_interface::return_type chaining_controller::EffortController::update(
   const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/)
 {
   registerJointFeedback(joint_names_);
+  jointEffortTester(joint_effort_);
   registerJointCommand(joint_names_, joint_effort_);
   return controller_interface::return_type::OK;
 }

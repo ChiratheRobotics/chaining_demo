@@ -64,6 +64,7 @@ controller_interface::return_type chaining_controller::EffortController::update(
   const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/)
 {
   registerJointFeedback(joint_names_);
+  registerJointCommand(joint_names_, joint_effort_);
   return controller_interface::return_type::OK;
 }
 
@@ -99,6 +100,25 @@ void chaining_controller::EffortController::registerJointFeedback(
                interface.get_interface_name() == hardware_interface::HW_IF_EFFORT;
       });
     joint_effort_[i] = effort_state->get_value();
+  }
+}
+
+void chaining_controller::EffortController::registerJointCommand(
+  const std::vector<std::string> & joint_names, const std::vector<double> & joint_efforts)
+{
+  for (int i = 0; i < n_joints_; i++)
+  {
+    std::string joint_name(joint_names[i]);
+
+    auto effort_command = std::find_if(
+      command_interfaces_.begin(), command_interfaces_.end(),
+      [&joint_name](const hardware_interface::LoanedCommandInterface & interface)
+      {
+        return interface.get_prefix_name() == "chained_controller" &&
+               interface.get_interface_name() == hardware_interface::HW_IF_EFFORT;
+      });
+
+    effort_command->set_value(joint_efforts[i]);
   }
 }
 

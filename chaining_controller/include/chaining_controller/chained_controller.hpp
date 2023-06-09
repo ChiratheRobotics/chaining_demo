@@ -34,8 +34,8 @@ protected:
   bool update();
 
 private:
-  double EFFORT_MAX = 15;
-  double EFFORT_MIN = 5;
+  double EFFORT_MAX = 1000;
+  double EFFORT_MIN = -1000;
 
   void registerJointCommand(const std::vector<double> & effort);
 

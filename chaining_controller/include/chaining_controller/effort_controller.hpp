@@ -30,6 +30,7 @@ public:
 
 private:
   void registerJointFeedback(const std::vector<std::string> &);
+  void registerJointCommand(const std::vector<std::string> &, const std::vector<double> &);
 
   int n_joints_;
   std::vector<std::string> joint_names_;

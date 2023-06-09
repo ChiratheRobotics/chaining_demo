@@ -3,6 +3,10 @@ This package is a demonstration of `Chaining Controller` in `ros2_control`.
 
 Tested on: ROS2 Humble
 
+`gazebo_ros2_control` repository was used for the Hardware Interface setup of this repository. It was a good starting point to understand and create hardware interfaces for classic-gazebo simultation.
+Here is the ink to gazebo_ros2_control repository: https://github.com/ros-controls/gazebo_ros2_control/tree/master
+
+
 For the Hardware Interface we have used `gazebo_ros2_control` package which contains:
 
 ```
@@ -75,3 +79,14 @@ In a new tab source the workspace and run:
 ros2 topic echo /joint_states
 ```
 You can see the efforts getting clipped by the chaining controller and being sent as a final command to the resource manager. These values are published by the joint state broadcaster over this topic.
+
+To inspect the working of controllers, you can run:
+
+```
+ros2 control list_controllers # To see the current state of the controllers
+ros2 control list_hardware_interfaces # To see the hardware interfaces
+```
+
+You can look at the claimed resources in `list_hardware_interfaces` as it will show you the `chaining_controller/effort` resource being `(available) [claimed]`. This is what you should be looking for when creating your chaining controllers as well.
+
+This command interface will ONLY show up when the state of chaining controller is ACTIVE where it would be `(unavailable) [unclaimed]`. After making the higher level controller active as well, you would see the desired output, i.e `(available) [claimed]`.

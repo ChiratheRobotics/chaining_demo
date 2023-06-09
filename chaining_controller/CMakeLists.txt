@@ -33,21 +33,6 @@ install(DIRECTORY
   DESTINATION share/${PROJECT_NAME}/
 )
 
-add_executable(example_effort examples/example_effort.cpp)
-ament_target_dependencies(example_effort
-  rclcpp
-  std_msgs
-)
-
-## Install
-install(
-  TARGETS
-    example_effort
-
-  DESTINATION
-    lib/${PROJECT_NAME}
-)
-
 ## effort_controller_upper
 add_library(
   effort_controller_upper
